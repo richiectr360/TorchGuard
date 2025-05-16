@@ -1,4 +1,4 @@
-# ML Code Assistant
+# TorchGuard
 
 ## The Problem
 
@@ -14,10 +14,115 @@ This tool automatically identifies these issues in your PyTorch code and suggest
 
 ## Features
 
-✨ **Automatic Code Analysis**: Scans your code for common performance pitfalls
-🚀 **One-Click Fixes**: Apply suggested optimizations with a single click
-🎯 **Best Practices**: Learn better coding patterns through actionable feedback
-💡 **Educational**: Understand why each optimization matters
+✨ **Automatic Code Analysis**: Scans your code for common performance pitfalls  
+🚀 **One-Click Fixes**: Apply suggested optimizations with a single click  
+🎯 **Best Practices**: Learn better coding patterns through actionable feedback  
+💡 **Educational**: Understand why each optimization matters  
+
+## Screenshots
+
+### Initial View
+![Initial View](screenshots/1.png)
+*The clean interface allows you to paste your PyTorch code and analyze it with one click.*
+
+### Analysis Results
+![Analysis Results](screenshots/2.png)
+*The analyzer identifies optimization opportunities and provides actionable fixes.*
+
+## Technical Implementation
+
+### Backend Architecture (Rust)
+
+The backend is built with Rust for high performance and reliability, featuring:
+
+#### 1. Code Analysis Engine
+- **Tree-sitter Integration**: Uses Tree-sitter for robust Python code parsing
+- **Pattern Matching**: Custom query system to identify common ML code patterns
+- **AST Analysis**: Traverses the Abstract Syntax Tree to detect optimization opportunities
+
+#### 2. Optimization Patterns
+The analyzer checks for several critical patterns:
+```rust
+pub struct Finding {
+    category: String,    // e.g., "GPU Usage", "Training", "Model State"
+    message: String,     // User-friendly explanation
+    line: i32,          // Location in code
+    severity: String,    // Importance level
+    fix: Option<Fix>,   // Suggested code improvement
+}
+```
+
+#### 3. Smart Fixes
+- Device-agnostic GPU usage
+- Gradient management
+- Memory optimization
+- Model state handling
+- Performance improvements
+
+### Frontend Stack (Next.js)
+
+Built with modern web technologies:
+- **Next.js**: For server-side rendering and optimal performance
+- **Monaco Editor**: VS Code-like editing experience
+- **Tailwind CSS**: Clean, responsive design
+- **TypeScript**: Type-safe code
+- **Real-time Analysis**: Instant feedback on code changes
+
+### API Design
+
+RESTful API endpoints:
+```rust
+POST /analyze
+- Accepts PyTorch code
+- Returns optimization findings
+- Supports batch analysis
+
+GET /health
+- Service health check
+- Backend status monitoring
+```
+
+### Implementation Details
+
+#### Rust Backend
+```rust
+// Core analyzer using Tree-sitter for parsing
+pub struct CodeAnalyzer {
+    parser: Parser,
+    query: Query,
+}
+
+// Findings returned to frontend
+pub struct Finding {
+    category: String,    // Type of optimization
+    message: String,     // What needs to be fixed
+    line: i32,          // Where to fix it
+    severity: String,    // How important it is
+    fix: Option<Fix>,    // How to fix it
+}
+```
+
+#### Vector Search with Qdrant
+- Store code patterns and optimizations in Qdrant
+- Semantic search for similar code patterns
+- Fast retrieval of relevant fixes
+
+#### LLM Integration with Ollama
+- Generate detailed explanations for fixes
+- Provide context-aware optimization suggestions
+- Help understand performance implications
+
+#### Key Features
+1. **Pattern Detection**
+   - Direct GPU usage (`.cuda()`)
+   - Missing gradient zeroing
+   - Inference mode checks
+   - Batch size optimization
+
+2. **Smart Fixes**
+   - Device-agnostic code
+   - Memory optimization
+   - Training best practices
 
 ## Project Structure
 
@@ -29,6 +134,20 @@ This tool automatically identifies these issues in your PyTorch code and suggest
 - Rust (latest stable)
 - Node.js (v18 or later)
 - npm
+- Qdrant (vector database)
+- Ollama (local LLM)
+
+### Setting up Dependencies
+
+1. **Install Qdrant**:
+```bash
+curl -L https://qdrant.io/install.sh | bash
+```
+
+2. **Install Ollama**:
+```bash
+curl https://ollama.ai/install.sh | sh
+```
 
 ## Getting Started
 
